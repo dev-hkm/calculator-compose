@@ -11,9 +11,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -326,7 +326,6 @@ fun CalculatorScreen() {
 
 // ---------------- Nút bấm ----------------
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun KeyButton(
     key: Key,
@@ -358,7 +357,10 @@ private fun KeyButton(
                     Brush.linearGradient(listOf(scheme.primary, scheme.secondary))
                 ) else Modifier
             )
-            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+            .clickable(onClick = onClick)
+            .pointerInput(Unit) {
+                detectTapGestures(onLongPress = { onLongClick() })
+            },
         contentAlignment = Alignment.Center
     ) {
         Text(
