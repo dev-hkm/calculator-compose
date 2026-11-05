@@ -1,0 +1,38 @@
+name: Build Calculator APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build Debug APK
+        run: gradle assembleDebug --no-daemon --stacktrace
+
+      - name: Upload Debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: calculator-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 30
+
+      - name: APK summary
+        run: |
+          echo "### APK đã build xong ✅" >> $GITHUB_STEP_SUMMARY
+          find app/build/outputs/apk/debug -name "*.apk" -exec ls -lh {} \; | awk '{print "- `"$9"` — "$5}' >> $GITHUB_STEP_SUMMARY
