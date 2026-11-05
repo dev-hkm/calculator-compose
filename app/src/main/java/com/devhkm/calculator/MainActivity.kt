@@ -178,13 +178,10 @@ fun CalculatorScreen() {
     }
 
     val bg = MaterialTheme.colorScheme.background
-    val gradient = remember(bg) {
+    val primaryColor = MaterialTheme.colorScheme.primary
+    val gradient = remember(bg, primaryColor) {
         Brush.verticalGradient(
-            colors = listOf(
-                bg,
-                bg.copy(alpha = 0.97f),
-                MaterialTheme.colorScheme.primary.copy(alpha = 0.06f)
-            )
+            colors = listOf(bg, bg.copy(alpha = 0.97f), primaryColor.copy(alpha = 0.06f))
         )
     }
 
