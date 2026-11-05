@@ -328,7 +328,7 @@ fun CalculatorScreen() {
 
 // ---------------- Nút bấm ----------------
 
-@androidx.compose.foundation.ExperimentalFoundationApi
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun KeyButton(
     key: Key,
@@ -350,35 +350,27 @@ private fun KeyButton(
         KeyKind.Equals -> scheme.onPrimary
     }
 
-    Surface(
+    Box(
         modifier = modifier
             .height(68.dp)
-            .clip(RoundedCornerShape(22.dp)),
-        color = container,
-        onClick = onClick,
-        onLongClick = onLongClick
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .then(
-                    if (key.kind == KeyKind.Equals) Modifier.background(
-                        Brush.linearGradient(
-                            listOf(scheme.primary, scheme.secondary)
-                        )
-                    ) else Modifier
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = key.label,
-                color = contentColor,
-                style = MaterialTheme.typography.headlineMedium.copy(
-                    fontSize = if (key.kind == KeyKind.Number || key.kind == KeyKind.Operator) 26.sp else 20.sp
-                ),
-                textAlign = TextAlign.Center
+            .clip(RoundedCornerShape(22.dp))
+            .background(if (key.kind == KeyKind.Equals) Color.Transparent else container)
+            .then(
+                if (key.kind == KeyKind.Equals) Modifier.background(
+                    Brush.linearGradient(listOf(scheme.primary, scheme.secondary))
+                ) else Modifier
             )
-        }
+            .combinedClickable(onClick = onClick, onLongClick = onLongClick),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = key.label,
+            color = contentColor,
+            style = MaterialTheme.typography.headlineMedium.copy(
+                fontSize = if (key.kind == KeyKind.Number || key.kind == KeyKind.Operator) 26.sp else 20.sp
+            ),
+            textAlign = TextAlign.Center
+        )
     }
 }
 
@@ -453,9 +445,7 @@ private fun HistorySheet(
                                 fontSize = 24.sp,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .pointerInput(Unit) { }
+                                modifier = Modifier.fillMaxWidth()
                             )
                         }
                     }
